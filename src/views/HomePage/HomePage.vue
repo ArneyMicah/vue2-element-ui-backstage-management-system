@@ -24,6 +24,8 @@
                 background-color: #e9eef3;
                 flex: 1;
                 height: calc(100vh - 60px);
+                min-height: calc(100vh - 60px);
+                box-sizing: border-box;
             }
 
             .active {
@@ -33,9 +35,12 @@
             .el-menu {
                 width: 200px;
                 height: calc(100vh - 60px);
+                max-width: 200px;
+                min-width: 180px;
             }
-            .isCollapse{
-                width: 65px;
+
+            .isCollapse {
+                width: 65px;;
             }
         }
     }
@@ -48,8 +53,8 @@
             <el-button type="info" @click="secede">退出</el-button>
         </div>
         <div class="content">
-            <el-menu :collapse="isCollapse" default-active="2" class="el-menu-vertical-demo el-menu" :class="{isCollapse: isCollapse}" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-                <p @click="isCollapse = !isCollapse" align="center" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
+            <el-menu router :collapse="isCollapse" default-active="2" class="el-menu-vertical-demo el-menu" :class="{isCollapse: isCollapse}" :collapse-transition="false" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                <p align="center" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
                 <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
                     <template slot="title">
                         <i :class="menuIcon[item.id]" style="color: #fff; margin-right: 10px; font-size: 20px;"></i>

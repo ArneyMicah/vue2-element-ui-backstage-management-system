@@ -12,8 +12,12 @@
             position: absolute;
             top: 0;
 
-            h1 {
+            p {
                 text-align: center;
+                font-size: 50px;
+                font-family: '华文彩云';
+                color: #fff;
+                text-shadow: 0 0 10px #000;
             }
         }
     }
@@ -21,7 +25,7 @@
 <template>
     <div class="welcome">
         <div class="background">
-            <h1>欢迎登录</h1>
+            <p>欢迎登录</p>
         </div>
     </div>
 </template>

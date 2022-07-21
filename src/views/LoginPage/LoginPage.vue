@@ -63,34 +63,52 @@
                 hideRequired: true,
                 ruleForm: {
                     username: '',
-                    password: '',
+                    password: ''
                 },
                 rules: {
-                    username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    username: [{
+                            required: true,
+                            message: '请输入用户名',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 3,
+                            max: 5,
+                            message: '长度在 3 到 5 个字符',
+                            trigger: 'blur'
+                        }
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' },
-                        { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+                        {
+                            min: 3,
+                            max: 6,
+                            message: '长度在 3 到 6 个字符',
+                            trigger: 'blur'
+                        }
                     ]
-                },
+                }
             }
         },
         methods: {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        getLoginInfo(this.ruleForm).then(res => {
-                            if(res.meta.status == 200){
-                                this.$router.push('/HomePage')
+                        getLoginInfo(this.ruleForm).then((res) => {
+                            if (res.meta.status == 200) {
+                                this.$router.push('/WelcomePage')
                             }
                         })
                     } else {
-                        return false;
+                        return false
                     }
-                });
-            },
+                })
+            }
+        },
+        watch: {
+            $route(to, from) {
+                console.log(to.path);
+            }
         },
     }
 </script>
