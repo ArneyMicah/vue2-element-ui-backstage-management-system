@@ -1,12 +1,12 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .welcome {
         position: relative;
 
         .background {
             background-image: url('http://96.43.108.32:4500/i/2022/07/20/skvim1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            @include background;
             width: 100%;
             height: calc(100vh - 60px);
             position: absolute;

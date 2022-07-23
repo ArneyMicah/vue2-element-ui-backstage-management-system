@@ -6,9 +6,7 @@
 
         .background {
             background-image: url('http://96.43.108.32:4500/i/2022/07/20/skvim1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            @include background;
             height: 100vh;
         }
 

@@ -38,9 +38,73 @@ const routes = [
           title: "用户管理"
         },
         component: () => import('../views/Users/Users.vue'),
-      }
+      },
+      {
+        path: '/roles',
+        name: 'roles',
+        meta:{
+          title: "角色列表"
+        },
+        component: () => import('../views/Roles/Roles.vue'),
+      },
+      {
+        path: '/rights',
+        name: 'rights',
+        meta:{
+          title: "权限列表"
+        },
+        component: () => import('../views/Rights/Rights.vue'),
+      },
+      {
+        path: '/goods',
+        name: 'goods',
+        meta:{
+          title: "商品列表"
+        },
+        component: () => import('../views/Goods/Goods.vue'),
+      },
+      {
+        path: '/params',
+        name: 'params',
+        meta:{
+          title: "分类参数"
+        },
+        component: () => import('../views/Params/Params.vue'),
+      },
+      {
+        path: '/categories',
+        name: 'categories',
+        meta:{
+          title: "商品分类"
+        },
+        component: () => import('../views/Categories/Categories.vue'),
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        meta:{
+          title: "订单列表"
+        },
+        component: () => import('../views/Orders/Orders.vue'),
+      },
+      {
+        path: '/reports',
+        name: 'reports',
+        meta:{
+          title: "数据报表"
+        },
+        component: () => import('../views/Reports/Reports.vue'),
+      },
+      {
+        path: '/AddGoodsPage',
+        name: 'AddGoodsPage',
+        meta:{
+          title: "添加商品"
+        },
+        component: () => import('../views/AddGoodsPage/AddGoodsPage.vue')
+      },
     ]
-  }
+  },
 ]
 
 const router = new VueRouter({

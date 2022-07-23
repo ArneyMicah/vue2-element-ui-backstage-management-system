@@ -1,74 +1,86 @@
 <style lang="scss" scoped>
-    .homepage {
-        .header {
-            height: 60px;
-            background-color: #373d41;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            color: #fff;
+    @import '../../style/style.scss';
 
-            .logo {
-                img {
-                    width: 50px;
-                    height: 50px;
+    .el-header {
+        background-color: #373d41;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .logo {
+
+            p {
+                font-weight: 600;
+                font-size: 20px;
+                background-color: #000;
+                width: 150px;
+                text-align: center;
+                padding: 10px;
+                box-sizing: border-box;
+                border-radius: 4px;
+                span:nth-child(2) {
+                    display: inline-block;
+                    background-color: #fe9a00;
+                    color: #000;
+                    border-radius: 2px;
+                    padding: 4px 3px;
                 }
             }
         }
+    }
 
-        .content {
-            display: flex;
+    .el-aside {
+        background-color: #000;
+        color: #333;
+        height: calc(100vh - 60px);
+        background-image: url('http://96.43.108.32:4500/i/2022/07/22/jy2m52.jpg');
+        @include background;
 
-            .main {
-                background-color: #e9eef3;
-                flex: 1;
-                height: calc(100vh - 60px);
-                min-height: calc(100vh - 60px);
-                box-sizing: border-box;
-            }
-
-            .active {
-                transform: rotate(90deg);
-            }
-
-            .el-menu {
-                width: 200px;
-                height: calc(100vh - 60px);
-                max-width: 200px;
-                min-width: 180px;
-            }
-
-            .isCollapse {
-                width: 65px;;
-            }
+        .el-menu {
+            border: none;
         }
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        padding: 0;
+        margin: 0;
+        background-image: url('http://96.43.108.32:4500/i/2022/07/20/skvim1.jpg');
+        @include background;
     }
 </style>
 <template>
     <div class="homepage">
-        <div class="header">
-            <div class="logo"><img src="../../assets/img/touxiang1.jpg"></div>
-            <h1>企业后台管理系统</h1>
-            <el-button type="info" @click="secede">退出</el-button>
-        </div>
-        <div class="content">
-            <el-menu router :collapse="isCollapse" default-active="2" class="el-menu-vertical-demo el-menu" :class="{isCollapse: isCollapse}" :collapse-transition="false" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-                <p align="center" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
-                <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
-                    <template slot="title">
-                        <i :class="menuIcon[item.id]" style="color: #fff; margin-right: 10px; font-size: 20px;"></i>
-                        <span>{{item.authName}}</span>
-                    </template>
-                    <el-menu-item-group>
-                        <el-menu-item :index="child.path" v-for="child in item.children" :key="child.id">{{item.authName}}</el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
-            </el-menu>
-            <div class="main">
-                <router-view></router-view>
-            </div>
-        </div>
+        <el-container>
+            <el-header>
+                <div class="logo">
+                    <p><span>Arney</span><span>Micah</span></p>
+                </div>
+                <h1>企业后台管理系统</h1>
+                <el-button type="info" @click="secede">退出</el-button>
+            </el-header>
+            <el-container>
+                <el-aside :width="isCollapse ? '64px' : '200px'">
+                    <el-menu router :collapse="isCollapse" default-active="path" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
+                        <p align="center" @click="isCollapse = !isCollapse" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
+                        <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
+                            <template slot="title">
+                                <i :class="menuIcon[item.id]" style="color: #fff; margin-right: 10px; font-size: 20px;"></i>
+                                <span>{{item.authName}}</span>
+                            </template>
+                            <el-menu-item-group>
+                                <el-menu-item :index="child.path" v-for="child in item.children" :key="child.id">{{child.authName}}</el-menu-item>
+                            </el-menu-item-group>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
+                <el-main>
+                    <router-view></router-view>
+                </el-main>
+            </el-container>
+        </el-container>
     </div>
 </template>
 <script>

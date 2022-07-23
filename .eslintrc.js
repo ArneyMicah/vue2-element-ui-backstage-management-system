@@ -33,5 +33,11 @@ module.exports = {
     'vue/no-dupe-keys': 0,
     'object-curly-spacing': 0,
     'vue/no-unused-vars': 0,
+    'camelcase': 0,
+    'no-unreachable-loop': 0,
+    'no-empty': 0,
+    'spaced-comment': 0,
+    'no-use-before-define': 0,
+    'quote-props': 0,
   }
 }

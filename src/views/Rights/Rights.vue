@@ -1,0 +1,65 @@
+<style lang="scss" scoped>
+    .rights {
+        max-height: calc(100vh - 60px);
+        overflow: auto;
+        .bread {
+            padding: 10px;
+        }
+        .content{
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.414);
+            border-radius: 10px;
+            margin: 10px;
+            margin-top: 0;
+            opacity: 0.8;
+        }
+    }
+</style>
+<template>
+    <div class="rights">
+        <div class="bread">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="content">
+            <el-table :data="tableData" border style="width: 100%" height="750px">
+                <el-table-column label="#" type="index" width="55px"></el-table-column>
+                <el-table-column prop="authName" label="权限名称" align="center">
+                </el-table-column>
+                <el-table-column prop="path" label="路径" align="center">
+                </el-table-column>
+                <el-table-column prop="level" label="权限等级" align="center">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.level == 0">一级</el-tag>
+                        <el-tag type="success" v-else-if="scope.row.level == 1">二级</el-tag>
+                        <el-tag type="warning" v-else-if="scope.row.level == 2">三级</el-tag>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</template>
+<script>
+    import {RightsList} from '../../utils/api.js'
+    export default {
+        data() {
+            return {
+                tableData: [],
+            };
+        },
+        methods: {
+            async render(){
+                let res = await RightsList()
+                console.log(res);
+                this.tableData = res.data
+            }
+        },
+        created(){
+            this.render()
+        }
+    };
+</script>
