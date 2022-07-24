@@ -271,7 +271,7 @@ export default {
 
 5.  自定义 toolbar 菜单
 
-    ```8javascript
+    ```javascript
    editorOption: {
                  placeholder: "请在这里输入",
                  modules:{
