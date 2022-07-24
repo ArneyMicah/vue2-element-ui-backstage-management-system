@@ -65,16 +65,15 @@
                     <el-tab-pane align="center" label="商品参数">配置管理</el-tab-pane>
                     <el-tab-pane align="center" label="商品属性">角色管理</el-tab-pane>
                     <el-tab-pane align="center" label="商品图片">
-                        <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple :headers="headers" :on-success="success" list-type="picture">
+                        <el-upload class="upload-demo" drag action="http://www.ysqorz.top:8888/api/private/v1/upload" multiple :headers="headers" :on-success="success" list-type="picture">
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </el-tab-pane>
                     <el-tab-pane align="center" label="商品内容">
-                        <quill-editor v-model="content"></quill-editor>
+                        <quill-editor v-model="addForm.goods_introduce"></quill-editor>
                         <el-button type="primary" @click="addGoods">添加商品</el-button>
-                        <div v-html="content"></div>
                     </el-tab-pane>
                     <el-tab-pane align="center" label="完成">定时任务补偿</el-tab-pane>
                 </el-tabs>
@@ -84,17 +83,16 @@
 </template>
 
 <script>
-    import { addGoodsList, getaCtegories } from '../../utils/api.js'
+    import { addGoodsList, getaCtegories} from '../../utils/api.js'
     export default {
         data() {
             return {
                 headers: {
-                    Authorization: window.sessionStorage.getItem("token"),
+                    Authorization: window.localStorage.getItem("token"),
                 },
                 hideRequired: true,
                 cascaderValue: '',
                 active: 0,
-                content: '',
                 options: [],
                 fileList: [],
                 addForm: {
@@ -137,26 +135,19 @@
             },
             success(val) {
                 console.log(val);
-                this.addForm.pics.push(val.file.response.data);
+                this.addForm.pics.push({ "pic": val.data.tmp_path})
             },
-            async addGoods() {
-                let goodsData = {
-                    goods_name: this.ruleForm.goods_name,
-                    goods_price: this.ruleForm.goods_price,
-                    goods_number: this.ruleForm.goods_number,
-                    goods_weight: this.ruleForm.goods_weight,
-                    goods_cat: this.ruleForm.goods_cat,
-                    goods_content: this.content,
-                    goods_introduce: this.addForm.goods_introduce,
-
-                }
-                // console.log(data);
-                // let quill = {
-                //     pics: this.addForm.pics
-                // }
-                // let data = [...goodsData, ...quill]
-                let res = await addGoodsList(goodsData)
-                console.log(res);
+            // async addGoods() {
+            //     // let data = {...this.ruleForm, ...this.addForm}
+            //     // console.log(data);
+            //     let res = await addGoodsList(this.ruleForm)
+            //     console.log(res);
+            //     this.render()
+            // },
+            addGoods(){
+                addGoodsList(this.ruleForm).then(res => {
+                    console.log(res);
+                })
             },
             async render() {
                 let res = await getaCtegories()

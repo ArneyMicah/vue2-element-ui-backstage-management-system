@@ -1,7 +1,10 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
     .rights {
-        max-height: calc(100vh - 60px);
+        max-height: calc(100vh - 58px);
         overflow: auto;
+        background-image: url('http://96.43.108.32:4500/i/2022/07/24/k8g4kk.png');
+        @include background;
         .bread {
             padding: 10px;
         }

@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import router from '../router/index'
 const instance = axios.create({
     baseURL: env.online.baseURL,
-    timeout: 1000,
+    timeout: 30000,
 })
 instance.interceptors.request.use(
     (config) => {

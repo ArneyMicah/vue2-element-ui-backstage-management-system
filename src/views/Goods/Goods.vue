@@ -56,7 +56,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+                            <el-button @click="deleteClick(scope.row.goods_id)" type="text" size="small">删除</el-button>
                             <el-button type="text" size="small">编辑</el-button>
                         </template>
                     </el-table-column>
@@ -70,7 +70,7 @@
     </div>
 </template>
 <script>
-    import { getGoodsList } from '../../utils/api.js'
+    import { getGoodsList, deleteGoodsList } from '../../utils/api.js'
     export default {
         data() {
             return {
@@ -101,6 +101,12 @@
                 let res = await getGoodsList(this.page)
                 this.tableData = res.data.goods
                 this.total = res.data.total
+                console.log(res);
+            },
+            async deleteClick(id) {
+                let data = { id: id }
+                console.log(data);
+                let res = await deleteGoodsList(data)
                 console.log(res);
             }
         },

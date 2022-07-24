@@ -19,6 +19,7 @@
                 padding: 10px;
                 box-sizing: border-box;
                 border-radius: 4px;
+
                 span:nth-child(2) {
                     display: inline-block;
                     background-color: #fe9a00;
@@ -34,7 +35,7 @@
         background-color: #000;
         color: #333;
         height: calc(100vh - 60px);
-        background-image: url('http://96.43.108.32:4500/i/2022/07/22/jy2m52.jpg');
+        background-image: url('http://96.43.108.32:4500/i/2022/07/24/k8eimu.jpg');
         @include background;
 
         .el-menu {
@@ -62,8 +63,8 @@
                 <el-button type="info" @click="secede">退出</el-button>
             </el-header>
             <el-container>
-                <el-aside :width="isCollapse ? '64px' : '200px'">
-                    <el-menu router :collapse="isCollapse" default-active="path" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
+                <el-aside :width="isCollapse ? '64px' : '240px'">
+                    <el-menu router :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
                         <p align="center" @click="isCollapse = !isCollapse" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
                         <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
                             <template slot="title">

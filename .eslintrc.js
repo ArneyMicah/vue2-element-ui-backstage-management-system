@@ -39,5 +39,6 @@ module.exports = {
     'spaced-comment': 0,
     'no-use-before-define': 0,
     'quote-props': 0,
+    'array-bracket-spacing': 0,
   }
 }

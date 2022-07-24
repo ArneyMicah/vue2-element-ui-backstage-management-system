@@ -3,7 +3,7 @@ export default {
         baseURL: 'http://www.ysqorz.top:8888/api/local/v1',
     },
     testing: {
-        baseURL: 'http://www.ysqorz.top:8888/api/testing/v1',
+        baseURL: 'http://175.27.228.178:3434/api/private/v1/',
     },
     online: {
         baseURL: 'http://www.ysqorz.top:8888/api/private/v1',

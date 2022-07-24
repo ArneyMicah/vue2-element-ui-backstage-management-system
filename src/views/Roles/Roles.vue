@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="adduserRoles">
-            <el-dialog title="添加用户" :visible.sync="addUserRoles" width="40%">
+            <el-dialog title="添加角色" :visible.sync="addUserRoles" width="40%">
                 <el-form label-position="left" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm" :hide-required-asterisk="hideRequired">
                     <el-form-item label="角色名称" prop="roleName">
                         <el-input v-model="ruleForm.roleName"></el-input>
