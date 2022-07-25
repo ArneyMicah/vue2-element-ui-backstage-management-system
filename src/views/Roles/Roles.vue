@@ -188,6 +188,9 @@
                 let res = await addUserRoleList(this.ruleForm)
                 console.log(res);
                 this.addUserRoles = false
+                for (let i in this.ruleForm) {
+                    this.ruleForm[i] = ''
+                }
                 this.render()
             },
             editorUserRole(item) {
@@ -205,6 +208,9 @@
                 }
                 await editorRoleList(data)
                 this.editorRole = false
+                for (let i in this.ruleForm) {
+                    this.ruleForm[i] = ''
+                }
                 this.render()
             },
             async reviseUser(id) {
@@ -216,8 +222,6 @@
             async addReviseUser() {
                 let CheckedTree = this.$refs.tree.getCheckedKeys();
                 let HalfCheckedTree = this.$refs.tree.getHalfCheckedKeys()
-                this.CheckedTreeID = CheckedTree
-                this.CheckedTreeNameID = HalfCheckedTree
                 let data = {
                     id: this.treeId,
                     rids: [...CheckedTree, ...HalfCheckedTree].join(',')
@@ -229,9 +233,6 @@
             searchUser() {
 
             },
-            handleClose(item, children){
-                
-            }
         },
         created() {
             this.render()

@@ -1,24 +1,21 @@
 <style lang="scss" scoped>
     .goods {
-        .bread {
-            padding: 10px;
-        }
-
-        .search-button {
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-
-            .input-with-select {
-                width: 400px;
-            }
-        }
-
+        padding: 10px;
         .content {
             padding: 15px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.49);
             border-radius: 10px;
-            margin: 10px;
+            opacity: 0.8;
+            margin-top: 10px;
+
+            .search-button {
+                display: flex;
+                align-items: center;
+
+                .input-with-select {
+                    width: 400px;
+                }
+            }
         }
     }
 </style>
@@ -32,13 +29,13 @@
                 <el-breadcrumb-item>活动详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="search-button">
-            <el-input placeholder="请输入内容" v-model="search" @input="searchUser" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search" @click="searchUser"></el-button>
-            </el-input>
-            <el-button type="primary" @click="$router.push('/AddGoodsPage')">添加商品</el-button>
-        </div>
         <div class="content">
+            <div class="search-button">
+                <el-input placeholder="请输入内容" v-model="search" @input="searchUser" class="input-with-select">
+                    <el-button slot="append" icon="el-icon-search" @click="searchUser"></el-button>
+                </el-input>
+                <el-button type="primary" @click="$router.push('/AddGoodsPage')">添加商品</el-button>
+            </div>
             <div class="el-table-list">
                 <el-table :data="tableData" border style="width: 100%" height="650px">
                     <el-table-column type="index" label="#" width="55">
@@ -107,7 +104,7 @@
                 let data = { id: id }
                 console.log(data);
                 let res = await deleteGoodsList(data)
-                console.log(res);
+                this.render()
             }
         },
         created() {

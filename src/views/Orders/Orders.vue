@@ -178,12 +178,13 @@
                 this.page.pagenum = val
                 this.render()
             },
-            orderInfoList(id) {
-                // let data = {
-                //     order_id: id
-                // }
-                // let res = await getLogistics(data)
-                // console.log(res);
+            async orderInfoList(id) {
+                let data = {
+                    id: id
+                }
+                console.log(data);
+                let res = await getLogistics(data)
+                console.log(res);
                 this.orderInfo = true
             }
         },

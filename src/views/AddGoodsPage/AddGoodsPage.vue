@@ -1,6 +1,16 @@
 <style lang="scss" scoped>
     .addgoods {
         .content {
+            .back{
+                font-size: 20px;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+                background-color: rgba(255, 255, 255, 0.449);
+                border-radius: 50%;
+                color: #fff;
+            }
             background-color: rgba(255, 255, 255, 0.387);
             padding: 10px;
             border-radius: 10px;
@@ -26,6 +36,7 @@
 <template>
     <div class="addgoods">
         <div class="content">
+            <div class="back" @click="$router.go(-1)"><i class="el-icon-arrow-left" style="font-weight: 600;"></i></div>
             <div class="steps">
                 <el-steps :active="active" finish-status="success" align-center>
                     <el-step title="基本信息"></el-step>
@@ -83,7 +94,7 @@
 </template>
 
 <script>
-    import { addGoodsList, getaCtegories} from '../../utils/api.js'
+    import { addGoodsList, getCategories} from '../../utils/api.js'
     export default {
         data() {
             return {
@@ -130,28 +141,23 @@
                 console.log(value);
                 this.ruleForm.goods_cat = value.join(",");
             },
-            tabsActive(val) {
-                this.active = Number(val);
+            tabsActive(newValue, oldValue) {
+                if(this.ruleForm.goods_name == ""){
+                    return false
+                }
+                console.log(newValue, oldValue);
+                this.active = Number(newValue);
             },
             success(val) {
                 console.log(val);
                 this.addForm.pics.push({ "pic": val.data.tmp_path})
             },
-            // async addGoods() {
-            //     // let data = {...this.ruleForm, ...this.addForm}
-            //     // console.log(data);
-            //     let res = await addGoodsList(this.ruleForm)
-            //     console.log(res);
-            //     this.render()
-            // },
-            addGoods(){
-                addGoodsList(this.ruleForm).then(res => {
-                    console.log(res);
-                })
+            async addGoods() {
+                let res = await addGoodsList({...this.ruleForm, ...this.addForm});
+                this.$router.push('/goods');
             },
             async render() {
-                let res = await getaCtegories()
-                console.log(res);
+                let res = await getCategories()
                 this.options = res.data
             }
         },

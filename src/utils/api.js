@@ -93,6 +93,13 @@ export function addUserRoleList(data) {
 }
 // 根据 ID 查询角色
 // 编辑提交角色
+export function editorRoleList(data) {
+    return api({
+        url: `/roles/${data.id}`,
+        method: 'PUT',
+        data,
+    })
+}
 // 删除角色
 export function deleteUserRole(data) {
     return api({
@@ -110,13 +117,6 @@ export function treeUserList(data) {
     })
 }
 // 删除角色指定权限
-export function editorRoleList(data) {
-    return api({
-        url: `/roles/${data.id}`,
-        method: 'PUT',
-        data,
-    })
-}
 export function deleteRoleRight(data) {
     return api({
         url: `/roles/${data.id}/rights/${data.rightId}`,
@@ -141,13 +141,41 @@ export function getCategories(data) {
     })
 }
 // 添加分类
+export function addCategoriesList(data) {
+    return api({
+        url: '/categories',
+        method: 'GET',
+        data,
+    })
+}
 // 根据 id 查询分类
 // 编辑提交分类
 // 删除分类
 // 六.分类参数管理
 // 参数列表
+export function getCategoriesList(data) {
+    return api({
+        url: `/categories/${data.id}/attributes`,
+        method: 'GET',
+        params: data,
+    })
+}
 // 添加动态参数或者静态属性
+export function addCategories(data) {
+    return api({
+        url: `categories/${data.id}/attributes`,
+        method: 'POST',
+        data,
+    })
+}
 // 删除参数
+export function deleteCategories(data) {
+    return api({
+        url: `categories/${data.id}/attributes/${data.attrid}`,
+        method: 'DELETE',
+        data,
+    })
+}
 // 根据 ID 查询参数
 // 编辑提交参数
 // 七.商品管理
@@ -210,13 +238,6 @@ export function getLogistics(data) {
 export function getReports(data) {
     return api({
         url: '/reports/type/1',
-        method: 'GET',
-        data,
-    })
-}
-export function getaCtegories(data) {
-    return api({
-        url: '/categories',
         method: 'GET',
         data,
     })

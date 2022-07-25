@@ -64,7 +64,7 @@
             </el-header>
             <el-container>
                 <el-aside :width="isCollapse ? '64px' : '240px'">
-                    <el-menu router :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
+                    <el-menu router :collapse="isCollapse" :default-active="pathIndex" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
                         <p align="center" @click="isCollapse = !isCollapse" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
                         <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
                             <template slot="title">
@@ -98,6 +98,7 @@
                     102: "iconfont icon-dingdanguanli",
                     145: "iconfont icon-shujutongji1",
                 },
+                pathIndex: '',
             }
         },
         methods: {
@@ -114,6 +115,16 @@
         },
         created() {
             this.render()
-        }
+            console.log(this.pathIndex);
+        },
+        watch: {
+            $route: {
+                deep: true,
+                immediate: true,
+                handler(val) {
+                    this.pathIndex = val.matched[1].name
+                }
+            }
+        },
     }
 </script>

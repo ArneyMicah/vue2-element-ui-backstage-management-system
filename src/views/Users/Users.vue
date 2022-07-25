@@ -3,6 +3,7 @@
         padding: 15px;
         height: calc(100vh - 90px);
         overflow-y: auto;
+
         .table-content {
             padding: 10px;
             opacity: 0.8;
@@ -65,7 +66,7 @@
                     </el-table-column>
                     <el-table-column prop="mg_state" label="状态">
                         <template slot-scope="scope">
-                            <el-switch v-model="scope.row.mg_state" @change="changeState(scope.row.id, scope.row.mg_state)"></el-switch>
+                            <el-switch v-model="scope.row.mg_state" @change="changeState(scope.row.id,scope.row.mg_state)"></el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" width="250px" align="center">
@@ -135,10 +136,10 @@
             <el-dialog title="分配角色" :visible.sync="assigningUserInfo" width="40%">
                 <el-form label-position="left" label-width="85px" class="demo-ruleForm">
                     <el-form-item label="当前用户">
-                        <span>{{deal.beforeusername}}</span>
+                        <span>{{ deal.beforeusername }}</span>
                     </el-form-item>
                     <el-form-item label="当前角色">
-                        <span>{{deal.beforerole}}</span>
+                        <span>{{ deal.beforerole }}</span>
                     </el-form-item>
                     <el-form-item label="分配新角色">
                         <el-select v-model="selectRole" @change="selectChange" placeholder="请选择">
@@ -157,45 +158,54 @@
     </div>
 </template>
 <script>
-    import { getUserList, addUserList, getChangeStatu, deleteUserInfo, compileUser, assigningUserRole, getUserRole } from '../../utils/api.js'
+    import {
+        getUserList,
+        addUserList,
+        getChangeStatu,
+        deleteUserInfo,
+        compileUser,
+        assigningUserRole,
+        getUserRole
+    } from '../../utils/api.js'
     export default {
         data() {
             // 用户名正则验证
             let validateUsername = (rule, value, callback) => {
                 let userReg = /^[a-zA-Z0-9_]{4,16}$/
                 if (!userReg.test(value)) {
-                    callback(new Error('请输入用户名'));
+                    callback(new Error('请输入用户名'))
                 } else {
-                    callback();
+                    callback(new Error('用户名验证错误'))
                 }
-            };
+            }
             // 密码正则验证
             let validatePassword = (rule, value, callback) => {
                 let passReg = /^[a-zA-Z0-9_]{6,16}$/
                 if (!passReg.test(value)) {
-                    callback(new Error('请输入密码'));
+                    callback(new Error('请输入密码'))
                 } else {
-                    callback();
+                    callback()
                 }
-            };
+            }
             // 邮箱正则验证
             let validateEemail = (rule, value, callback) => {
-                let emailReg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
+                let emailReg =
+                    /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
                 if (!emailReg.test(value)) {
-                    callback(new Error('请输入邮箱'));
+                    callback(new Error('请输入邮箱'))
                 } else {
-                    callback();
+                    callback()
                 }
-            };
+            }
             // 电话正则验证
             let validateMobile = (rule, value, callback) => {
                 let mobileReg = /^1[3456789]\d{9}$/
                 if (!mobileReg.test(value)) {
-                    callback(new Error('请输入电话'));
+                    callback(new Error('请输入电话'))
                 } else {
-                    callback();
+                    callback()
                 }
-            };
+            }
             return {
                 selectRole: '',
                 options: [],
@@ -211,7 +221,7 @@
                 page: {
                     query: '',
                     pagenum: 1,
-                    pagesize: 10,
+                    pagesize: 10
                 },
                 // 分配角色变量
                 deal: {
@@ -219,37 +229,29 @@
                     beforerole: '',
                     id: '',
                     email: '',
-                    mobile: '',
+                    mobile: ''
                 },
                 // 表单内容
                 ruleForm: {
                     username: '',
                     password: '',
                     email: '',
-                    mobile: '',
+                    mobile: ''
                 },
                 // 正则验证弹出框
                 rules: {
-                    username: [
-                        { validator: validateUsername, trigger: 'blur' }
-                    ],
-                    password: [
-                        { validator: validatePassword, trigger: 'blur' }
-                    ],
-                    email: [
-                        { validator: validateEemail, trigger: 'blur' }
-                    ],
-                    mobile: [
-                        { validator: validateMobile, trigger: 'blur' }
-                    ],
-                },
+                    username: [{ validator: validateUsername, trigger: 'blur' }],
+                    password: [{ validator: validatePassword, trigger: 'blur' }],
+                    email: [{ validator: validateEemail, trigger: 'blur' }],
+                    mobile: [{ validator: validateMobile, trigger: 'blur' }]
+                }
             }
         },
         methods: {
             // 调取渲染用户列表
             async render() {
                 let res = await getUserList(this.page)
-                console.log(res);
+                console.log(res)
                 this.tableData = res.data.users
                 this.total = res.data.total
             },
@@ -260,24 +262,24 @@
             },
             // 添加用户信息列表
             addUserList(formName) {
-                this.$refs[formName].validate(valid => {
+                this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let data = {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             email: this.ruleForm.email,
-                            mobile: this.ruleForm.mobile,
+                            mobile: this.ruleForm.mobile
                         }
-                        addUserList(data).then(res => {
-                            console.log(res);
+                        addUserList(data).then((res) => {
+                            console.log(res)
                             this.addUserInfo = false
                             this.render()
                         })
                     } else {
-                        console.log('error submit!!');
-                        return false;
+                        console.log('error submit!!')
+                        return false
                     }
-                });
+                })
                 // if (this.ruleForm.username == '') {
                 //     this.$message.error('请输入用户名');
                 //     return;
@@ -299,32 +301,34 @@
             // 删除单个用户功能
             deleteClick(id) {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    let data = { id: id }
-                    console.log(data);
-                    deleteUserInfo(data).then(res => {
-                        console.log(res);
-                        this.render()
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
                     })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                    .then(() => {
+                        let data = { id: id }
+                        console.log(data)
+                        deleteUserInfo(data).then((res) => {
+                            console.log(res)
+                            this.render()
+                        })
+                    })
+                    .catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })
+                    })
             },
             // 分页功能
             sizeChange(val) {
-                console.log(val);
+                console.log(val)
                 this.page.pagesize = val
                 this.render()
             },
             // 分页功能
             currentChange(val) {
-                console.log(val);
+                console.log(val)
                 this.page.pagenum = val
                 this.render()
             },
@@ -342,7 +346,7 @@
                     email: this.ruleForm.email,
                     mobile: this.ruleForm.mobile
                 }
-                compileUser(data).then(res => {
+                compileUser(data).then((res) => {
                     this.render()
                     this.compileUserInfo = false
                 })
@@ -355,10 +359,10 @@
                     beforerole: role_name,
                     id: id,
                     email: email,
-                    mobile: mobile,
+                    mobile: mobile
                 }
                 this.assigningUserInfo = true
-                getUserRole().then(res => {
+                getUserRole().then((res) => {
                     this.options = res.data
                 })
             },
@@ -368,11 +372,11 @@
                     id: this.deal.id,
                     rid: this.RoleId,
                     email: this.deal.email,
-                    mobile: this.deal.mobile,
+                    mobile: this.deal.mobile
                 }
-                console.log(data);
-                assigningUserRole(data).then(res => {
-                    console.log(res);
+                console.log(data)
+                assigningUserRole(data).then((res) => {
+                    console.log(res)
                     this.render()
                     this.assigningUserInfo = false
                 })
