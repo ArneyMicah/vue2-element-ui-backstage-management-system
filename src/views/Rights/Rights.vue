@@ -1,20 +1,10 @@
 <style lang="scss" scoped>
     @import '../../style/style.scss';
     .rights {
-        max-height: calc(100vh - 58px);
-        overflow: auto;
-        background-image: url('http://96.43.108.32:4500/i/2022/07/24/k8g4kk.png');
-        @include background;
-        .bread {
-            padding: 10px;
-        }
+        @include index;
         .content{
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.414);
-            border-radius: 10px;
-            margin: 10px;
-            margin-top: 0;
-            opacity: 0.8;
+            @include content;
+            margin-top: 10px;
         }
     }
 </style>

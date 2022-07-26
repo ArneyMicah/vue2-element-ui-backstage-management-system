@@ -1,18 +1,12 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .users {
-        padding: 15px;
-        height: calc(100vh - 90px);
-        overflow-y: auto;
+        @include index;
 
         .table-content {
-            padding: 10px;
-            opacity: 0.8;
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.483);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            @include content;
             margin-top: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 5px #000;
         }
 
         .search-button {
@@ -71,9 +65,9 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" width="250px" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="compileUser(scope.row, scope.row.id)" type="primary" size="small" icon="el-icon-edit"></el-button>
-                            <el-button @click="deleteClick(scope.row.id)" type="danger" size="small" icon="el-icon-delete"></el-button>
-                            <el-button @click="assigningUser(scope.row)" type="warning" size="small" icon="el-icon-setting"></el-button>
+                            <el-button circle @click="compileUser(scope.row, scope.row.id)" type="primary" size="small" icon="el-icon-edit"></el-button>
+                            <el-button circle @click="deleteClick(scope.row.id)" type="danger" size="small" icon="el-icon-delete"></el-button>
+                            <el-button circle @click="assigningUser(scope.row)" type="warning" size="small" icon="el-icon-setting"></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -361,25 +355,22 @@
                     email: email,
                     mobile: mobile
                 }
-                this.assigningUserInfo = true
                 getUserRole().then((res) => {
                     this.options = res.data
                 })
+                this.assigningUserInfo = true
             },
             // 点击确定实现角色修改
-            assigningRole() {
+            async assigningRole() {
                 let data = {
                     id: this.deal.id,
                     rid: this.RoleId,
                     email: this.deal.email,
                     mobile: this.deal.mobile
                 }
-                console.log(data)
-                assigningUserRole(data).then((res) => {
-                    console.log(res)
-                    this.render()
-                    this.assigningUserInfo = false
-                })
+                assigningUserRole(data)
+                this.render()
+                this.assigningUserInfo = false
             },
             // 切换角色查找对应id
             selectChange(val) {

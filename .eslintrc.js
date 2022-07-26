@@ -40,5 +40,7 @@ module.exports = {
     'no-use-before-define': 0,
     'quote-props': 0,
     'array-bracket-spacing': 0,
+    'vue/no-parsing-error': 0,
+    'array-callback-return': 0, 
   }
 }

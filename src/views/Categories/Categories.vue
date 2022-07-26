@@ -1,15 +1,12 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .categories {
-        padding: 10px;
-        max-height: calc(100vh - 90px);
-        overflow-y: auto;
+        @include index;
 
         .content {
-            background-color: rgba(255, 255, 255, 0.432);
-            padding: 10px;
+            @include content;
             margin-top: 10px;
-            border-radius: 10px;
-            opacity: 0.8;
 
             .search-button {
                 display: flex;
@@ -40,7 +37,7 @@
                 <el-button type="primary" @click="categoriesInfo = true">添加分类</el-button>
             </div>
             <div class="zk-table">
-                <zk-table ref="table" class="tb-cate" index-text="#" show-index stripe border :data="tableData" :columns="columns" :expand-type="false" :selection-type="false">
+                <zk-table ref="table" class="tb-cate" index-text="#" show-index stripe border :data="dataTable" :columns="columns" :expand-type="false" :selection-type="false">
                     <template slot="valid" slot-scope="scope">
                         <i class="el-icon-success" v-if="!scope.row.cat_deleted" style="color: lightGreen"></i>
                         <i class="el-icon-error" v-else style="color: red"></i>
@@ -51,10 +48,14 @@
                         <el-tag type="warning" effect="plain" size="mini" v-show="scope.row.cat_level == 2">三级</el-tag>
                     </template>
                     <template slot="operate" slot-scope="scope">
-                        <el-button type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-                        <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                        <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+                        <el-button type="danger" size="small" @click="deleteCategories(scope.row.cat_id)">删除</el-button>
                     </template>
                 </zk-table>
+            </div>
+            <div class="pagination">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.pagenum" :page-sizes="[5, 10, 15, 20]" :page-size="page.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                </el-pagination>
             </div>
         </div>
         <div class="el-categories">
@@ -64,7 +65,7 @@
                         <el-input v-model="ruleForm.cat_name"></el-input>
                     </el-form-item>
                     <el-form-item label="父级分类" prop="cat_pid">
-                        <el-cascader v-model="ruleForm.cat_pid" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true }" clearable @change="change"></el-cascader>
+                        <el-cascader v-model="classId" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true }" clearable @change="change"></el-cascader>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -76,13 +77,20 @@
     </div>
 </template>
 <script>
-    import { getCategories, addCategoriesList } from '../../utils/api.js'
+    import { getCategories, addCategoriesList, deleteCategoriesList } from '../../utils/api.js'
     export default {
         data() {
             return {
                 hideRequired: true,
                 categoriesInfo: false,
                 dataList: [],
+                classId: [],
+                page: {
+                    type: [1, 2, 3],
+                    pagenum: 1,
+                    pagesize: 10,
+                },
+                total: 0,
                 columns: [
                     { label: "分类名称", prop: "cat_name" },
                     {
@@ -104,10 +112,12 @@
                     }
                 ],
                 tableData: [],
+                dataTable: [],
                 search: '',
                 ruleForm: {
                     cat_name: '',
-                    cat_pid: '',
+                    cat_pid: 0,
+                    cat_level: 0,
                 },
                 rules: {
                     attr_name: [
@@ -119,21 +129,50 @@
         },
         methods: {
             async render() {
-                let res = await getCategories()
-                console.log(res);
-                this.tableData = res.data
-                this.dataList = res.data
+                let resOne = await getCategories()
+                this.tableData = resOne.data
+                this.dataList = resOne.data
+                let resTwo = await getCategories(this.page)
+                this.total = resTwo.data.total
+                this.dataTable = resTwo.data.result
             },
-            change(){
+            change() {
+                console.log(this.classId);
+                if (this.classId.length == 0) {
+                    this.ruleForm.cat_pid = 0
+                    this.ruleForm.cat_level = 0
+                } else if (this.classId.length == 1) {
+                    this.ruleForm.cat_pid = this.classId[0]
+                    this.ruleForm.cat_level = 1
+                } else if (this.classId.length == 2 || this.classId.length == 3) {
+                    this.ruleForm.cat_pid = this.classId[1]
+                    this.ruleForm.cat_level = 2
+                }
+            },
+            searchUser() {
 
             },
-            searchUser(){
-                
+            async addCategories() {
+                await addCategoriesList(this.ruleForm)
+                this.categoriesInfo = false
+                this.render()
             },
-            async addCategories(){
-                let res = await addCategoriesList(this.ruleForm)
+            async deleteCategories(id) {
+                let data = {
+                    id: id
+                }
+                let res = await deleteCategoriesList(data)
                 console.log(res);
-            }
+                this.render()
+            },
+            handleSizeChange(val) {
+                this.page.pagesize = val
+                this.render()
+            },
+            handleCurrentChange(val) {
+                this.page.pagenum = val
+                this.render()
+            },
         },
         created() {
             this.render()

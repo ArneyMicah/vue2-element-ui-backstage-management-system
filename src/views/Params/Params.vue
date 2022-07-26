@@ -1,12 +1,11 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .params {
-        padding: 10px;
+        @include index;
 
         .content {
-            background-color: rgba(255, 255, 255, 0.411);
-            padding: 10px;
-            border-radius: 10px;
-            opacity: 0.8;
+            @include content;
 
             .header {
                 display: flex;
@@ -18,7 +17,7 @@
 <template>
     <div class="params">
         <div class="content">
-            <el-alert title="警告提示的文案" type="warning" center show-icon></el-alert>
+            <el-alert title="注意：只允许为第三级分类设置相关参数！" type="warning" center show-icon></el-alert>
             <div class="header">
                 <p>选择商品分类: <el-cascader v-model="selectRole" :options="options" @change="handleChange" :props="{value: 'cat_id', label: 'cat_name'}">
                     </el-cascader>
@@ -27,9 +26,9 @@
             <div class="el-tabs">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="动态参数" name="first">
-                        <el-button type="primary" @click="addArgument = true">添加参数</el-button>
+                        <el-button type="primary" size="small" @click="addArgument = true">添加参数</el-button>
                         <div class="el-table-list">
-                            <el-table :data="tableData" border style="width: 100%" height="600px">
+                            <el-table :data="tableData" border stripe>
                                 <el-table-column type="index" label="#" align="center">
                                 </el-table-column>
                                 <el-table-column prop="attr_name" label="参数名称" align="center">
@@ -44,12 +43,12 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="静态属性" name="second">
-                        <el-button type="primary" @click="addAttribute = true">添加属性</el-button>
+                        <el-button type="primary" size="small" @click="addAttribute = true">添加属性</el-button>
                         <div class="el-table-list">
-                            <el-table :data="dataTable" border style="width: 100%" height="600px">
+                            <el-table :data="dataTable" border stripe>
                                 <el-table-column type="index" label="#" align="center">
                                 </el-table-column>
-                                <el-table-column prop="attr_name" label="参数名称" align="center">
+                                <el-table-column prop="attr_name" label="属性名称" align="center">
                                 </el-table-column>
                                 <el-table-column label="操作" align="center">
                                     <template slot-scope="scope">
@@ -120,14 +119,21 @@
         },
         methods: {
             async handleChange(value) {
+                if (value.length != 3) {
+                    this.sel = 'many'
+                    return false
+                }
                 this.optionsId = value[2];
                 this.Parameter()
             },
             async handleClick(value) {
-                if (value.name == 'first') {
+                if (this.optionsId == '') {
+                    this.$message.error('请选择分类');
+                    return false
+                } else if (value.name == 'first') {
                     this.sel = 'many'
                     this.Parameter()
-                } else {
+                } else if (value.name == 'second') {
                     this.sel = 'only'
                     this.AttributeList()
                 }
@@ -143,9 +149,9 @@
                     attrid: attr_id,
                 }
                 let res = await deleteCategories(data)
-                if(this.sel == 'many'){
+                if (this.sel == 'many') {
                     this.Parameter()
-                }else if(this.sel == 'only'){
+                } else if (this.sel == 'only') {
                     this.AttributeList()
                 }
             },
@@ -175,6 +181,7 @@
                     sel: this.sel,
                 }
                 getCategoriesList(dataMany).then(res => {
+                    console.log(res);
                     this.tableData = res.data
                 })
             },
@@ -184,6 +191,7 @@
                     sel: this.sel,
                 }
                 getCategoriesList(dataOnly).then(res => {
+                    console.log(res);
                     this.dataTable = res.data
                 })
             }

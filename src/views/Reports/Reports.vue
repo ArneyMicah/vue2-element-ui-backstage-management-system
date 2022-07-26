@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-    @import '..//..//style/style.scss';
+    @import '../../style/style.scss';
 
     .reports {
         width: 100%;

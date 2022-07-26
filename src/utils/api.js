@@ -144,13 +144,20 @@ export function getCategories(data) {
 export function addCategoriesList(data) {
     return api({
         url: '/categories',
-        method: 'GET',
+        method: 'POST',
         data,
     })
 }
 // 根据 id 查询分类
 // 编辑提交分类
 // 删除分类
+export function deleteCategoriesList(data) {
+    return api({
+        url: `/categories/${data.id}`,
+        method: 'DELETE',
+        data,
+    })
+}
 // 六.分类参数管理
 // 参数列表
 export function getCategoriesList(data) {
@@ -190,7 +197,7 @@ export function getGoodsList(data) {
 // 添加商品
 export function addGoodsList(data) {
     return api({
-        url: '/goods',
+        url: 'goods',
         method: 'POST',
         data,
     })

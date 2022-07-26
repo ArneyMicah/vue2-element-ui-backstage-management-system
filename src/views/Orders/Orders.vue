@@ -1,15 +1,12 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .orders {
-        padding: 10px;
-        height: calc(100vh - 90px);
-        overflow-y: auto;
+        @include index;
 
         .content {
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.414);
+            @include content;
             margin-top: 10px;
-            opacity: 0.8;
-            border-radius: 10px;
 
             .search-button {
                 display: flex;
@@ -178,13 +175,8 @@
                 this.page.pagenum = val
                 this.render()
             },
-            async orderInfoList(id) {
-                let data = {
-                    id: id
-                }
-                console.log(data);
-                let res = await getLogistics(data)
-                console.log(res);
+            orderInfoList(id) {
+                console.log(id);
                 this.orderInfo = true
             }
         },

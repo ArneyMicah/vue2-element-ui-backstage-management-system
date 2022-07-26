@@ -1,7 +1,9 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .addgoods {
         .content {
-            .back{
+            .back {
                 font-size: 20px;
                 width: 30px;
                 height: 30px;
@@ -11,6 +13,7 @@
                 border-radius: 50%;
                 color: #fff;
             }
+
             background-color: rgba(255, 255, 255, 0.387);
             padding: 10px;
             border-radius: 10px;
@@ -73,8 +76,22 @@
                             </el-form-item>
                         </el-form>
                     </el-tab-pane>
-                    <el-tab-pane align="center" label="商品参数">配置管理</el-tab-pane>
-                    <el-tab-pane align="center" label="商品属性">角色管理</el-tab-pane>
+                    <el-tab-pane align="left" label="商品参数">
+                        <el-form label-position="top" label-width="55px">
+                            <el-form-item v-for="(item, index) in manyParams" :key="index" :label="item.attr_name">
+                                <el-checkbox-group v-model="item.attr_vals">
+                                    <el-checkbox border v-for="(ele, index) in item.attr_vals" :key="index" :label="ele"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
+                    <el-tab-pane align="left" label="商品属性">
+                        <el-form label-position="top" label-width="55px" class="demo-ruleForm">
+                            <el-form-item v-for="(item, index) in onlyParams" :key="index" :label="item.attr_name">
+                                <el-input v-model="item.attr_vals"></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
                     <el-tab-pane align="center" label="商品图片">
                         <el-upload class="upload-demo" drag action="http://www.ysqorz.top:8888/api/private/v1/upload" multiple :headers="headers" :on-success="success" list-type="picture">
                             <i class="el-icon-upload"></i>
@@ -94,7 +111,7 @@
 </template>
 
 <script>
-    import { addGoodsList, getCategories} from '../../utils/api.js'
+    import { addGoodsList, getCategories, getCategoriesList } from '../../utils/api.js'
     export default {
         data() {
             return {
@@ -105,6 +122,10 @@
                 cascaderValue: '',
                 active: 0,
                 options: [],
+                manyParams: [],
+                onlyParams: [],
+                optionsId: '',
+                optionsLength: "",
                 fileList: [],
                 addForm: {
                     goods_introduce: '',
@@ -138,22 +159,72 @@
         },
         methods: {
             handleChange(value) {
-                console.log(value);
+                console.log(value[2]);
+                this.optionsId = value[2]
+                this.optionsLength = value.length;
                 this.ruleForm.goods_cat = value.join(",");
             },
             tabsActive(newValue, oldValue) {
-                if(this.ruleForm.goods_name == ""){
+                if (oldValue == 0 && this.optionsLength != 3) {
+                    this.$message({
+                        message: '请完善商品分类',
+                        type: 'error'
+                    });
                     return false
                 }
-                console.log(newValue, oldValue);
+                if (newValue == 1) {
+                    let data = {
+                        id: this.optionsId,
+                        sel: 'many',
+                    }
+                    console.log(data);
+                    getCategoriesList(data).then(res => {
+                        res.data.forEach(item => {
+                            item.attr_vals = item.attr_vals.length > 0 ? item.attr_vals.split(',') : []
+                        })
+                        this.manyParams = res.data
+                        console.log(this.manyParams);
+                    })
+                }
+                if (newValue == 2) {
+                    let data = {
+                        id: this.optionsId,
+                        sel: 'only',
+                    }
+                    getCategoriesList(data).then(res => {
+                        this.onlyParams = res.data
+                        console.log(this.onlyParams);
+                    })
+                }
                 this.active = Number(newValue);
             },
             success(val) {
                 console.log(val);
-                this.addForm.pics.push({ "pic": val.data.tmp_path})
+                this.addForm.pics.push({ "pic": val.data.tmp_path })
             },
             async addGoods() {
-                let res = await addGoodsList({...this.ruleForm, ...this.addForm});
+                let manyattrs = this.manyParams.map(item => {
+                    return {
+                        attr_id: item.attr_id,
+                        attr_vals: item.attr_vals.join(',')
+                    }
+                })
+                console.log(manyattrs);
+                let onlyattrs = this.onlyParams.map(item => {
+                    return {
+                        attr_id: item.attr_id,
+                        attr_vals: item.attr_vals
+                    }
+                })
+                let attrs = [...manyattrs, ...onlyattrs]
+                console.log(attrs);
+                let data = {
+                    ...this.ruleForm,
+                    ...this.addForm,
+                    attrs: attrs,
+                }
+                console.log(data);
+                await addGoodsList(data);
                 this.$router.push('/goods');
             },
             async render() {

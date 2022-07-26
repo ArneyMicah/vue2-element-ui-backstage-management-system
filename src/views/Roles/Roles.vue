@@ -2,30 +2,10 @@
     @import '../../style/style.scss';
 
     .roles {
-        height: 100%;
-        max-height: calc(100vh - 60px);
-        overflow-y: auto;
-        background-image: url('http://96.43.108.32:4500/i/2022/07/22/o4a2g0.jpg');
-        @include background;
-
-        .header {
-            padding: 15px;
-            padding-bottom: 0;
-
-            .bread {
-                margin: 10px 0;
-            }
-        }
-
+        @include index;
         .content {
-            background-color: rgba(255, 255, 255, 0.435);
-            padding: 15px;
-            margin: 15px;
-            margin-top: 0;
-            border-radius: 10px;
-            box-shadow: 0 0 3px #000;
-            opacity: 0.8;
-
+            @include content;
+            margin-top: 10px;
             .search-button {
                 display: flex;
                 align-items: center;
@@ -34,10 +14,32 @@
                     width: 400px;
                 }
             }
-            .el-tags{
+
+            .el-tags {
                 display: flex;
-                div{
-                    flex: 1;
+
+                .first {
+                    width: 20%;
+
+                    div {
+                        float: left;
+                    }
+                }
+
+                .second {
+                    width: 30%;
+
+                    div {
+                        float: left;
+                    }
+                }
+
+                .third {
+                    width: 50%;
+
+                    div {
+                        float: left;
+                    }
                 }
             }
         }
@@ -45,15 +47,13 @@
 </style>
 <template>
     <div class="roles">
-        <div class="header">
-            <div class="bread">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
+        <div class="bread">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            </el-breadcrumb>
         </div>
         <div class="content">
             <div class="search-button">
@@ -68,13 +68,25 @@
                         <template slot-scope="scope">
                             <div class="el-tags" v-if="scope.row.children.length != 0">
                                 <div class="first">
-                                    <el-tag closable v-for="(item, index) in scope.row.children" :key="index">{{scope.row.children[0].authName}}</el-tag>
+                                    <div v-for="(item, index) in scope.row.children" :key="index">
+                                        <el-tag @close="firstClose(scope.row.id, item.id)" closable>{{item.authName}}</el-tag>
+                                    </div>
                                 </div>
                                 <div class="second">
-                                    <el-tag closable type="success" v-for="(item, index) in scope.row.children[0].children" :key="index">{{scope.row.children[0].children[0].authName}}</el-tag>
+                                    <div v-for="(item, index) in scope.row.children" :key="index">
+                                        <div v-for="(secondItem, index) in item.children" :key="index">
+                                            <el-tag @close="secondClose(scope.row.id, secondItem.id)" closable type="success">{{secondItem.authName}}</el-tag>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="third">
-                                    <el-tag closable type="danger" v-for="(item, index) in  scope.row.children[0].children[0].children" :key="index">{{item.authName}}</el-tag>
+                                    <div v-for="(item, index) in scope.row.children" :key="index">
+                                        <div v-for="(secondItem, index) in item.children" :key="index">
+                                            <div v-for="(thirdItem, index) in secondItem.children" :key="index">
+                                                <el-tag @close="thirdClose(scope.row.id, thirdItem.id)" closable type="danger">{{thirdItem.authName}}</el-tag>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -87,9 +99,9 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="400px" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="editorUserRole(scope.row)" type="success" size="small" icon="el-icon-edit">编辑</el-button>
+                            <el-button @click="editorUserRole(scope.row.id)" type="success" size="small" icon="el-icon-edit">编辑</el-button>
                             <el-button @click="deleteRoles(scope.row.id)" type="danger" size="small" icon="el-icon-delete">删除</el-button>
-                            <el-button @click="reviseUser(scope.row.id)" type="primary" size="small" icon="el-icon-setting">角色修改</el-button>
+                            <el-button @click="reviseUser(scope.row.id, scope.row)" type="primary" size="small" icon="el-icon-setting">角色修改</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -129,7 +141,7 @@
         </div>
         <div class="reviseRole">
             <el-dialog title="角色信息" :visible.sync="reviseRole" width="40%">
-                <el-tree :data="treeData" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current :props="defaultProps">
+                <el-tree :data="treeData" :default-checked-keys="defaultChecked" show-checkbox node-key="id" ref="tree" highlight-current :props="defaultProps">
                 </el-tree>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="reviseRole = false">取 消</el-button>
@@ -140,7 +152,7 @@
     </div>
 </template>
 <script>
-    import { getUserRole, deleteUserRole, addUserRoleList, editorRoleList, treeRoleList, treeUserList } from '../../utils/api'
+    import { getUserRole, deleteUserRole, addUserRoleList, editorRoleList, treeRoleList, treeUserList, deleteRoleRight } from '../../utils/api'
     export default {
         data() {
             return {
@@ -152,6 +164,7 @@
                 editorId: '',
                 treeId: '',
                 search: '',
+                defaultChecked: [],
                 ruleForm: {
                     roleName: '',
                     roleDesc: ''
@@ -179,10 +192,11 @@
                 await deleteUserRole(data)
                 this.render()
             },
-            async render() {
-                let res = await getUserRole()
-                console.log(res);
-                this.tableData = res.data
+            render() {
+                getUserRole().then(res => {
+                    console.log(res);
+                    this.tableData = res.data
+                })
             },
             async addUserRolesList() {
                 let res = await addUserRoleList(this.ruleForm)
@@ -213,11 +227,12 @@
                 }
                 this.render()
             },
-            async reviseUser(id) {
+            async reviseUser(id, row) {
                 let res = await treeRoleList()
                 this.treeData = res.data
                 this.treeId = id
                 this.reviseRole = true
+                this.recurrence(row, this.defaultChecked)
             },
             async addReviseUser() {
                 let CheckedTree = this.$refs.tree.getCheckedKeys();
@@ -233,6 +248,35 @@
             searchUser() {
 
             },
+            recurrence(row, key) {
+                if (!row.children) {
+                    return key.push(row.id)
+                }
+                row.children.forEach(item => {
+                    this.recurrence(item, key)
+                })
+            },
+            async firstClose(id, rightId) {
+                let data = {
+                    id: id,
+                    rightId: rightId
+                }
+                await deleteRoleRight(data)
+            },
+            async secondClose(id, rightId) {
+                let data = {
+                    id: id,
+                    rightId: rightId
+                }
+                await deleteRoleRight(data)
+            },
+            async thirdClose(id, rightId) {
+                let data = {
+                    id: id,
+                    rightId: rightId
+                }
+                await deleteRoleRight(data)
+            }
         },
         created() {
             this.render()

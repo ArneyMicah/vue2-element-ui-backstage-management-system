@@ -1,11 +1,11 @@
 <style lang="scss" scoped>
+    @import '../../style/style.scss';
+
     .goods {
-        padding: 10px;
+        @include index;
+
         .content {
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.49);
-            border-radius: 10px;
-            opacity: 0.8;
+            @include content;
             margin-top: 10px;
 
             .search-button {
@@ -53,8 +53,8 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="deleteClick(scope.row.goods_id)" type="text" size="small">删除</el-button>
-                            <el-button type="text" size="small">编辑</el-button>
+                            <el-button @click="deleteClick(scope.row.goods_id)" type="danger" size="small">删除</el-button>
+                            <el-button type="primary" size="small">编辑</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -109,6 +109,9 @@
         },
         created() {
             this.render()
+        },
+        filters: {
+
         }
     };
 </script>

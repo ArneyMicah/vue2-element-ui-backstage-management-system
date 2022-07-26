@@ -1,13 +1,11 @@
 <style lang="scss" scoped>
     @import '../../style/style.scss';
-
     .el-header {
         background-color: #373d41;
         color: #fff;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         .logo {
 
             p {
@@ -32,12 +30,9 @@
     }
 
     .el-aside {
-        background-color: #000;
+        background-color: #333744;
         color: #333;
         height: calc(100vh - 60px);
-        background-image: url('http://96.43.108.32:4500/i/2022/07/24/k8eimu.jpg');
-        @include background;
-
         .el-menu {
             border: none;
         }
@@ -63,8 +58,8 @@
                 <el-button type="info" @click="secede">退出</el-button>
             </el-header>
             <el-container>
-                <el-aside :width="isCollapse ? '64px' : '240px'">
-                    <el-menu router :collapse="isCollapse" :default-active="pathIndex" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="transparent" text-color="#fff" active-text-color="#ffd04b">
+                <el-aside :width="isCollapse ? '64px' : '200px'">
+                    <el-menu router :collapse="isCollapse" :default-active="pathIndex" class="el-menu-vertical-demo el-menu" :collapse-transition="false" background-color="#333744" text-color="#fff" active-text-color="#ffd04b">
                         <p align="center" @click="isCollapse = !isCollapse" style="color: #fff;"><i :class="{active: isCollapse}" class="el-icon-s-operation"></i></p>
                         <el-submenu :index="item.path" v-for="item in menusList" :key="item.id">
                             <template slot="title">

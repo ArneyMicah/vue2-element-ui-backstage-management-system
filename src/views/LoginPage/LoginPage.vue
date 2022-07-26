@@ -5,7 +5,7 @@
         position: relative;
 
         .background {
-            background-image: url('http://96.43.108.32:4500/i/2022/07/20/skvim1.jpg');
+            background-image: url('http://96.43.108.32:4500/i/2022/07/26/yr4twj.png');
             @include background;
             height: 100vh;
         }
@@ -13,7 +13,8 @@
         .content {
             width: 550px;
             height: 300px;
-            background-color: rgba(255, 255, 255, 0.634);
+            background-color: rgba(255, 255, 255, 0.699);
+            opacity: 0.8;
             min-width: 200px;
             min-height: 195px;
             position: absolute;
