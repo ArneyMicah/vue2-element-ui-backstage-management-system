@@ -12,6 +12,7 @@
                 background-color: rgba(255, 255, 255, 0.449);
                 border-radius: 50%;
                 color: #fff;
+                cursor: pointer;
             }
 
             background-color: rgba(255, 255, 255, 0.387);
@@ -33,6 +34,10 @@
 
         .el-cascader-panel {
             height: 200px;
+        }
+
+        ::v-deep .ql-editor {
+            height: 250px;
         }
     }
 </style>
@@ -103,7 +108,7 @@
                         <quill-editor v-model="addForm.goods_introduce"></quill-editor>
                         <el-button type="primary" @click="addGoods">添加商品</el-button>
                     </el-tab-pane>
-                    <el-tab-pane align="center" label="完成">定时任务补偿</el-tab-pane>
+                    <el-tab-pane align="center" label="完成">完成</el-tab-pane>
                 </el-tabs>
             </div>
         </div>
@@ -167,7 +172,7 @@
             tabsActive(newValue, oldValue) {
                 if (oldValue == 0 && this.optionsLength != 3) {
                     this.$message({
-                        message: '请完善商品分类',
+                        message: '请完善商品信息',
                         type: 'error'
                     });
                     return false
@@ -218,6 +223,16 @@
                 })
                 let attrs = [...manyattrs, ...onlyattrs]
                 console.log(attrs);
+                // let data = {
+                //     goods_name: this.ruleForm.goods_name,
+                //     goods_price: this.ruleForm.goods_price,
+                //     goods_number: this.ruleForm.goods_number,
+                //     goods_weight: this.ruleForm.goods_weight,
+                //     goods_cat: this.ruleForm.goods_cat,
+                //     goods_introduce: this.addForm.goods_introduce,
+                //     pics: this.addForm.pics,
+                //     attrs: attrs,
+                // }
                 let data = {
                     ...this.ruleForm,
                     ...this.addForm,

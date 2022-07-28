@@ -1,6 +1,6 @@
 export default {
     local: {
-        baseURL: 'https://www.liulongbin.top:8888/api/private/v1',
+        baseURL: 'http://127.0.0.1:8888/api/private/v1/',
     },
     testing: {
         baseURL: 'http://175.27.228.178:3434/api/private/v1/',

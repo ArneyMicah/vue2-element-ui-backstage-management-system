@@ -48,7 +48,7 @@
                     </el-table-column>
                     <el-table-column prop="add_time" label="创建时间" align="center">
                         <template slot-scope="scope">
-                            <span>{{new Date(scope.row.add_time * 1000).toLocaleString()}}</span>
+                            <span>{{scope.row.add_time | year}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center">

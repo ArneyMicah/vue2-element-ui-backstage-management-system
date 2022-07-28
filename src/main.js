@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/element.js'
-
+import moment from 'moment'
 Vue.config.productionTip = false
 // 引入全局样式
 import './style/global.css'
@@ -21,6 +21,10 @@ Vue.prototype.$echarts = echarts;
 // 引入树状表格插件
 import ZkTable from 'vue-table-with-tree-grid'
 Vue.use(ZkTable)
+Vue.filter('year', function(time){
+  let data = moment(time * 1000).format('YYYY-MM-DD  HH:mm:SS')
+  return data
+})
 new Vue({
   router,
   store,

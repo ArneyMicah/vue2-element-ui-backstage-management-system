@@ -1,13 +1,10 @@
 <style lang="scss" scoped>
     @import '../../style/style.scss';
-
     .orders {
         @include index;
-
         .content {
             @include content;
             margin-top: 10px;
-
             .search-button {
                 display: flex;
                 align-items: center;
@@ -53,7 +50,8 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="orderInfoList(scope.row.order_id)" type="text" size="small">查看物流</el-button>
+                            <el-button @click="addressInfo = true" type="success" size="small">地址</el-button>
+                            <el-button @click="orderInfoList(scope.row.order_id)" type="primary" size="small">物流</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -76,21 +74,42 @@
                 </span>
             </el-dialog>
         </div>
+        <div class="addressInfo">
+            <el-dialog title="收货地址" :visible.sync="addressInfo" width="40%">
+                <el-form label-position="left" label-width="100px">
+                    <el-form-item label="省/市/县/区" prop="username">
+                        <el-cascader v-model="province" :options="City" :props="{ expandTrigger: 'hover' }"></el-cascader>
+                    </el-form-item>
+                    <el-form-item label="详细地址" prop="username">
+                        <el-input v-model="address"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="addressInfo = false">取 消</el-button>
+                    <el-button type="primary" @click="addressInfoList">确 定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
     import { getOrderList, getLogistics } from '../../utils/api.js'
+    import City from '../../../public/city.js'
     export default {
         data() {
             return {
                 search: '',
                 tableData: [],
                 orderInfo: false,
+                addressInfo: false,
                 page: {
                     query: '',
                     pagenum: 1,
                     pagesize: 10,
                 },
+                province: '',
+                City,
+                address: '',
                 total: 0,
                 reverse: true,
                 activities: [{
@@ -178,6 +197,10 @@
             orderInfoList(id) {
                 console.log(id);
                 this.orderInfo = true
+            },
+            addressInfoList(){
+                this.address = ''
+                this.addressInfo = false
             }
         },
         created() {

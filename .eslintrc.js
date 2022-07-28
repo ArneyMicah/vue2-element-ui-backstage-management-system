@@ -42,5 +42,6 @@ module.exports = {
     'array-bracket-spacing': 0,
     'vue/no-parsing-error': 0,
     'array-callback-return': 0, 
+    'no-dupe-keys': 0,
   }
 }

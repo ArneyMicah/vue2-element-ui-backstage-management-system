@@ -150,6 +150,13 @@ export function addCategoriesList(data) {
 }
 // 根据 id 查询分类
 // 编辑提交分类
+export function editorRoleInfo(data){
+    return api({
+        url: `/categories/${data.id}`,
+        method: 'PUT',
+        data,
+    })
+}
 // 删除分类
 export function deleteCategoriesList(data) {
     return api({
@@ -185,6 +192,13 @@ export function deleteCategories(data) {
 }
 // 根据 ID 查询参数
 // 编辑提交参数
+export function editorCategories(data) {
+    return api({
+        url: `categories/${data.id}/attributes/${data.attrId}`,
+        method: 'PUT',
+        data,
+    })
+}
 // 七.商品管理
 // 商品列表数据
 export function getGoodsList(data) {
@@ -197,7 +211,7 @@ export function getGoodsList(data) {
 // 添加商品
 export function addGoodsList(data) {
     return api({
-        url: 'goods',
+        url: '/goods',
         method: 'POST',
         data,
     })

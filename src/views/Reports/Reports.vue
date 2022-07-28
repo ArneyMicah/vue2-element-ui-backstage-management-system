@@ -2,23 +2,21 @@
     @import '../../style/style.scss';
 
     .reports {
-        width: 100%;
-        height: 100%;
-        position: relative;
-
         .canvas {
-            width: 1200px;
-            height: 700px;
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.493);
             border-radius: 10px;
-            position: absolute;
-            @include auto;
-            box-shadow: 0 0 3px #000;
+            position: relative;
 
             #canvas {
-                width: 100%;
-                height: 100%;
+                background-color: rgba(255, 255, 255, 0.442);
+                width: 1250px;
+                height: 650px;
+                border-radius: 10px;
+                position: absolute;
+                top: 100px;
+                left: 50%;
+                margin-left: -625px;
+                box-shadow: 0 0 3px #000;
             }
         }
     }
@@ -26,42 +24,56 @@
 <template>
     <div class="reports">
         <div class="canvas">
-            <h2>数据统计</h2>
             <div id="canvas"></div>
         </div>
     </div>
 </template>
 <script>
+    import * as echarts from 'echarts'
     import { getReports } from '../../utils/api.js'
     export default {
         data() {
             return {
-                opacity: {},
+                preData: {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#E9EEF3'
+                            }
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [{
+                        boundaryGap: false
+                    }],
+                    yAxis: [{
+                        type: 'value'
+                    }]
+                }
             };
         },
         methods: {
-            async render() {
-                let res = await getReports()
-                this.opacity = res.data
-            },
             canvas() {
-                let myChart = this.$echarts.init(document.getElementById('canvas'))
-                myChart.setOption(this.opacity);
+                let canvas = document.querySelector('#canvas')
+                console.log(canvas);
+                let myChart = echarts.init(canvas)
+                getReports().then(res => {
+                    console.log(res);
+                    let mergeData = { ...this.preData, ...res.data }
+                    let options = mergeData
+                    myChart.setOption(options)
+                })
             }
-        },
-        created() {
-            this.render()
         },
         mounted() {
             this.canvas()
-        },
-        watch: {
-            opacity: {
-                handler() {
-                    this.canvas();
-                },
-                deep: true,
-            }
         },
     };
 </script>

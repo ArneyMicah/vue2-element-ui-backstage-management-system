@@ -29,13 +29,21 @@
                         <el-button type="primary" size="small" @click="addArgument = true">添加参数</el-button>
                         <div class="el-table-list">
                             <el-table :data="tableData" border stripe>
+                                <el-table-column type="expand" label="#" align="center">
+                                    <template slot-scope="scope">
+                                        <el-tag :key="index" v-for="(tag, index) in scope.row.attr_vals" closable :disable-transitions="false" @close="handleClose(scope.row, index)">{{tag}}</el-tag>
+                                        <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)">
+                                        </el-input>
+                                        <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column type="index" label="#" align="center">
                                 </el-table-column>
                                 <el-table-column prop="attr_name" label="参数名称" align="center">
                                 </el-table-column>
                                 <el-table-column label="操作" align="center">
                                     <template slot-scope="scope">
-                                        <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
+                                        <el-button @click="editClick(scope.row)" type="primary" size="small">编辑</el-button>
                                         <el-button @click="deleteArgument(scope.row.cat_id, scope.row.attr_id)" type="danger" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
@@ -46,13 +54,21 @@
                         <el-button type="primary" size="small" @click="addAttribute = true">添加属性</el-button>
                         <div class="el-table-list">
                             <el-table :data="dataTable" border stripe>
+                                <el-table-column type="expand" label="#" align="center">
+                                    <template slot-scope="scope">
+                                        <el-tag :key="index" v-for="(tag, index) in scope.row.attr_vals" closable :disable-transitions="false" @close="handleClose(scope.row, index)">{{tag}}</el-tag>
+                                        <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)">
+                                        </el-input>
+                                        <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column type="index" label="#" align="center">
                                 </el-table-column>
                                 <el-table-column prop="attr_name" label="属性名称" align="center">
                                 </el-table-column>
                                 <el-table-column label="操作" align="center">
                                     <template slot-scope="scope">
-                                        <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
+                                        <el-button @click="editClick(scope.row)" type="primary" size="small">编辑</el-button>
                                         <el-button @click="deleteArgument(scope.row.cat_id, scope.row.attr_id)" type="danger" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
@@ -88,10 +104,23 @@
                 </span>
             </el-dialog>
         </div>
+        <div class="editparameter">
+            <el-dialog title="修改分类参数" :visible.sync="EditAttribute" width="40%">
+                <el-form label-position="left" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="85px" class="demo-ruleForm" :hide-required-asterisk="hideRequired">
+                    <el-form-item label="参数名称">
+                        <el-input v-model="ruleForm.attr_name"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="EditAttribute = false">取 消</el-button>
+                    <el-button type="primary" @click="EditAttributeList">确 定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
-    import { getCategories, getCategoriesList, deleteCategories, addCategories } from '../../utils/api.js'
+    import { getCategories, getCategoriesList, deleteCategories, addCategories, editorCategories } from '../../utils/api.js'
     export default {
         data() {
             return {
@@ -100,10 +129,12 @@
                 options: [],
                 optionsId: '',
                 activeName: 'first',
+                EditAttribute: false,
                 tableData: [],
                 dataTable: [],
                 addArgument: false,
                 addAttribute: false,
+                attrId: '',
                 sel: 'many',
                 ruleForm: {
                     attr_name: '',
@@ -115,6 +146,8 @@
                         { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
                     ],
                 },
+                inputVisible: false,
+                inputValue: ''
             };
         },
         methods: {
@@ -148,7 +181,7 @@
                     id: id,
                     attrid: attr_id,
                 }
-                let res = await deleteCategories(data)
+                await deleteCategories(data)
                 if (this.sel == 'many') {
                     this.Parameter()
                 } else if (this.sel == 'only') {
@@ -182,6 +215,11 @@
                 }
                 getCategoriesList(dataMany).then(res => {
                     console.log(res);
+                    res.data.forEach(item => {
+                        item.inputVisible = false;
+                        item.inputValue = '';
+                        item.attr_vals = item.attr_vals.length > 0 ? item.attr_vals.split(',') : []
+                    })
                     this.tableData = res.data
                 })
             },
@@ -192,8 +230,66 @@
                 }
                 getCategoriesList(dataOnly).then(res => {
                     console.log(res);
+                    res.data.forEach(item => {
+                        item.inputVisible = false;
+                        item.inputValue = '';
+                        item.attr_vals = item.attr_vals.length > 0 ? item.attr_vals.split(',') : []
+                    })
                     this.dataTable = res.data
                 })
+            },
+            handleClose(item, i) {
+                item.attr_vals.splice(i, 1)
+                let data = {
+                    id: this.optionsId,
+                    attrId: item.attr_id,
+                    attr_name: item.attr_name,
+                    attr_sel: this.ruleForm.attr_sel,
+                    attr_vals: item.attr_vals.join(','),
+                }
+                console.log(data);
+                editorCategories(data)
+            },
+            showInput(item) {
+                item.inputVisible = true;
+                this.$nextTick((_) => {
+                    this.$refs.saveTagInput.$refs.input.focus()
+                })
+            },
+            handleInputConfirm(item) {
+                let valueInput = item.inputValue
+                if (valueInput.trim().length != 0) {
+                    item.attr_vals.push(valueInput);
+                    let data = {
+                        id: this.optionsId,
+                        attrId: item.attr_id,
+                        attr_name: item.attr_name,
+                        attr_sel: this.ruleForm.attr_sel,
+                        attr_vals: item.attr_vals.join(','),
+                    }
+                    console.log(data);
+                    editorCategories(data)
+                }
+                item.inputVisible = false;
+                item.inputValue = '';
+            },
+            editClick(item) {
+                console.log(item);
+                this.ruleForm.attr_name = item.attr_name
+                this.attrId = item.attr_id
+                this.EditAttribute = true
+            },
+            async EditAttributeList() {
+                let data = {
+                    id: this.optionsId,
+                    attrId: this.attrId,
+                    attr_name: this.ruleForm.attr_name,
+                    attr_sel: this.ruleForm.attr_sel,
+                }
+                console.log(data);
+                await editorCategories(data)
+                this.EditAttribute = false
+                this.render()
             }
         },
         created() {

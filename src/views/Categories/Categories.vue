@@ -19,6 +19,19 @@
         }
     }
 </style>
+<style>
+    .el-radio {
+        width: 300px;
+        position: absolute;
+        top: 0;
+        height: 30px;
+        margin-left: 0;
+    }
+
+    .el-radio__inner {
+        display: none;
+    }
+</style>
 <template>
     <div class="categories">
         <div class="bread">
@@ -65,7 +78,7 @@
                         <el-input v-model="ruleForm.cat_name"></el-input>
                     </el-form-item>
                     <el-form-item label="父级分类" prop="cat_pid">
-                        <el-cascader v-model="classId" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true }" clearable @change="change"></el-cascader>
+                        <el-cascader v-model="classId" ref="remain" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true, expandTrigger: 'hover'}" clearable @change="change"></el-cascader>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -74,19 +87,34 @@
                 </span>
             </el-dialog>
         </div>
+        <div class="el-edit">
+            <el-dialog title="编辑分类" :visible.sync="editCategoriesInfo" width="40%">
+                <el-form label-position="left" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm" :hide-required-asterisk="hideRequired">
+                    <el-form-item label="分类名称" prop="cat_name">
+                        <el-input v-model="ruleForm.cat_name"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="editCategoriesInfo = false">取 消</el-button>
+                    <el-button type="primary" @click="EditCategories">确 定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
-    import { getCategories, addCategoriesList, deleteCategoriesList } from '../../utils/api.js'
+    import { getCategories, addCategoriesList, deleteCategoriesList, editorRoleInfo } from '../../utils/api.js'
     export default {
         data() {
             return {
                 hideRequired: true,
                 categoriesInfo: false,
+                editCategoriesInfo: false,
                 dataList: [],
                 classId: [],
+                editId: '',
                 page: {
-                    type: [1, 2, 3],
+                    type: [2],
                     pagenum: 1,
                     pagesize: 10,
                 },
@@ -137,7 +165,6 @@
                 this.dataTable = resTwo.data.result
             },
             change() {
-                console.log(this.classId);
                 if (this.classId.length == 0) {
                     this.ruleForm.cat_pid = 0
                     this.ruleForm.cat_level = 0
@@ -148,6 +175,7 @@
                     this.ruleForm.cat_pid = this.classId[1]
                     this.ruleForm.cat_level = 2
                 }
+                this.$refs.remain.dropDownVisible = false
             },
             searchUser() {
 
@@ -173,6 +201,19 @@
                 this.page.pagenum = val
                 this.render()
             },
+            handleEdit(item) {
+                console.log(item);
+                this.ruleForm.cat_name = item.cat_name
+                this.editId = item.cat_id
+                this.editCategoriesInfo = true
+            },
+            async EditCategories() {
+                let data = {id: this.editId, cat_name: this.ruleForm.cat_name}
+                await editorRoleInfo(data)
+                this.ruleForm.cat_name = ''
+                this.editCategoriesInfo = false
+                this.render()
+            }
         },
         created() {
             this.render()
