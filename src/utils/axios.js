@@ -23,7 +23,8 @@ instance.interceptors.response.use(
         if (success.includes(result.data.meta.status)) {
             Message({
                 message: result.data.meta.msg,
-                type: 'success'
+                type: 'success',
+                duration: 500,
             })
             if (result.config.url == '/login') {
                 localStorage.setItem('token', result.data.data.token)
@@ -31,7 +32,8 @@ instance.interceptors.response.use(
         } else {
             Message({
                 message: result.data.meta.msg,
-                type: 'error'
+                type: 'error',
+                duration: 500,
             })
         }
         if(result.data.meta.msg == '无效token'){

@@ -2,20 +2,18 @@
     @import '../../style/style.scss';
 
     .reports {
-        .canvas {
-            text-align: center;
-            border-radius: 10px;
-            position: relative;
+        padding: 10px;
 
+        .bread {
+            margin-bottom: 10px;
+        }
+
+        .canvas {
             #canvas {
                 background-color: rgba(255, 255, 255, 0.442);
                 width: 1250px;
                 height: 650px;
                 border-radius: 10px;
-                position: absolute;
-                top: 100px;
-                left: 50%;
-                margin-left: -625px;
                 box-shadow: 0 0 3px #000;
             }
         }
@@ -23,6 +21,9 @@
 </style>
 <template>
     <div class="reports">
+        <div class="bread">
+            <BreadCrumb level1="订单管理" level2="订单"></BreadCrumb>
+        </div>
         <div class="canvas">
             <div id="canvas"></div>
         </div>
@@ -35,6 +36,9 @@
         data() {
             return {
                 preData: {
+                    title: {
+                        text: '用户来源'
+                    },
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {

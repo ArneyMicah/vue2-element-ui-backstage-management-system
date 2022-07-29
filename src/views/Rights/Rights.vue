@@ -11,12 +11,7 @@
 <template>
     <div class="rights">
         <div class="bread">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-            </el-breadcrumb>
+            <BreadCrumb level1="权限管理" level2="权限列表"></BreadCrumb>
         </div>
         <div class="content">
             <el-table :data="tableData" border style="width: 100%" height="750px">

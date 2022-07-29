@@ -29,11 +29,7 @@
     <div class="users">
         <!-- 面包屑 -->
         <div class="bread">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-                <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-            </el-breadcrumb>
+            <BreadCrumb level1="用户管理" level2="用户列表"></BreadCrumb>
         </div>
         <!-- 面包屑 -->
         <div class="table-content">
@@ -169,7 +165,7 @@
                 if (!userReg.test(value)) {
                     callback(new Error('请输入用户名'))
                 } else {
-                    callback(new Error('用户名验证错误'))
+                    callback()
                 }
             }
             // 密码正则验证

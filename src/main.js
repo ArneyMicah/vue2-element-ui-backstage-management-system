@@ -5,6 +5,8 @@ import store from './store'
 import './plugins/element.js'
 import moment from 'moment'
 Vue.config.productionTip = false
+import BreadCrumb from './components/BreadCrumb.vue'
+Vue.component('BreadCrumb', BreadCrumb)
 // 引入全局样式
 import './style/global.css'
 // 引入本地字体图标

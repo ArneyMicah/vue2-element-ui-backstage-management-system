@@ -19,19 +19,6 @@
         }
     }
 </style>
-<style>
-    .el-radio {
-        width: 300px;
-        position: absolute;
-        top: 0;
-        height: 30px;
-        margin-left: 0;
-    }
-
-    .el-radio__inner {
-        display: none;
-    }
-</style>
 <template>
     <div class="categories">
         <div class="bread">
@@ -78,7 +65,7 @@
                         <el-input v-model="ruleForm.cat_name"></el-input>
                     </el-form-item>
                     <el-form-item label="父级分类" prop="cat_pid">
-                        <el-cascader v-model="classId" ref="remain" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true, expandTrigger: 'hover'}" clearable @change="change"></el-cascader>
+                        <el-cascader v-model="classId" :options="dataList" :props="{ value: 'cat_id', label: 'cat_name', checkStrictly: true }" clearable @change="change"></el-cascader>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -109,12 +96,11 @@
             return {
                 hideRequired: true,
                 categoriesInfo: false,
-                editCategoriesInfo: false,
                 dataList: [],
                 classId: [],
-                editId: '',
+                editCategoriesInfo: false,
                 page: {
-                    type: [2],
+                    type: [1, 2, 3],
                     pagenum: 1,
                     pagesize: 10,
                 },
@@ -165,6 +151,7 @@
                 this.dataTable = resTwo.data.result
             },
             change() {
+                console.log(this.classId);
                 if (this.classId.length == 0) {
                     this.ruleForm.cat_pid = 0
                     this.ruleForm.cat_level = 0
@@ -175,7 +162,6 @@
                     this.ruleForm.cat_pid = this.classId[1]
                     this.ruleForm.cat_level = 2
                 }
-                this.$refs.remain.dropDownVisible = false
             },
             searchUser() {
 
@@ -183,6 +169,7 @@
             async addCategories() {
                 await addCategoriesList(this.ruleForm)
                 this.categoriesInfo = false
+                this.ruleForm.cat_name = ''
                 this.render()
             },
             async deleteCategories(id) {
@@ -208,7 +195,7 @@
                 this.editCategoriesInfo = true
             },
             async EditCategories() {
-                let data = {id: this.editId, cat_name: this.ruleForm.cat_name}
+                let data = { id: this.editId, cat_name: this.ruleForm.cat_name }
                 await editorRoleInfo(data)
                 this.ruleForm.cat_name = ''
                 this.editCategoriesInfo = false

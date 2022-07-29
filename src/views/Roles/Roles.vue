@@ -3,9 +3,11 @@
 
     .roles {
         @include index;
+
         .content {
             @include content;
             margin-top: 10px;
+
             .search-button {
                 display: flex;
                 align-items: center;
@@ -48,12 +50,7 @@
 <template>
     <div class="roles">
         <div class="bread">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-            </el-breadcrumb>
+            <BreadCrumb level1="权限管理" level2="角色列表"></BreadCrumb>
         </div>
         <div class="content">
             <div class="search-button">
@@ -99,7 +96,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="400px" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="editorUserRole(scope.row.id)" type="success" size="small" icon="el-icon-edit">编辑</el-button>
+                            <el-button @click="editorUserRole(scope.row)" type="success" size="small" icon="el-icon-edit">编辑</el-button>
                             <el-button @click="deleteRoles(scope.row.id)" type="danger" size="small" icon="el-icon-delete">删除</el-button>
                             <el-button @click="reviseUser(scope.row.id, scope.row)" type="primary" size="small" icon="el-icon-setting">角色修改</el-button>
                         </template>
@@ -187,10 +184,22 @@
             };
         },
         methods: {
-            async deleteRoles(id) {
-                let data = { id: id };
-                await deleteUserRole(data)
-                this.render()
+            deleteRoles(id) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let data = { id: id };
+                    deleteUserRole(data).then(res => {
+                        this.render()
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             render() {
                 getUserRole().then(res => {
@@ -262,6 +271,7 @@
                     rightId: rightId
                 }
                 await deleteRoleRight(data)
+                this.render()
             },
             async secondClose(id, rightId) {
                 let data = {
@@ -269,6 +279,7 @@
                     rightId: rightId
                 }
                 await deleteRoleRight(data)
+                this.render()
             },
             async thirdClose(id, rightId) {
                 let data = {
@@ -276,6 +287,7 @@
                     rightId: rightId
                 }
                 await deleteRoleRight(data)
+                this.render()
             }
         },
         created() {

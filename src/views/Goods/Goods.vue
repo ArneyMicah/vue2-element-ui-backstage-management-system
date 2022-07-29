@@ -22,12 +22,7 @@
 <template>
     <div class="goods">
         <div class="bread">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-            </el-breadcrumb>
+            <BreadCrumb level1="商品管理" level2="商品列表"></BreadCrumb>
         </div>
         <div class="content">
             <div class="search-button">
@@ -100,11 +95,22 @@
                 this.total = res.data.total
                 console.log(res);
             },
-            async deleteClick(id) {
-                let data = { id: id }
-                console.log(data);
-                let res = await deleteGoodsList(data)
-                this.render()
+            deleteClick(id) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let data = { id: id }
+                    deleteGoodsList(data).then(res => {
+                        this.render()
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         created() {

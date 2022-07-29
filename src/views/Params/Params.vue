@@ -12,10 +12,17 @@
                 align-items: center;
             }
         }
+
+        .bread {
+            margin-bottom: 10px;
+        }
     }
 </style>
 <template>
     <div class="params">
+        <div class="bread">
+            <BreadCrumb level1="商品管理" level2="参数列表"></BreadCrumb>
+        </div>
         <div class="content">
             <el-alert title="注意：只允许为第三级分类设置相关参数！" type="warning" center show-icon></el-alert>
             <div class="header">
@@ -26,7 +33,7 @@
             <div class="el-tabs">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="动态参数" name="first">
-                        <el-button type="primary" size="small" @click="addArgument = true">添加参数</el-button>
+                        <el-button type="primary" size="small" @click="addArgument = true" :disabled="disabled">添加参数</el-button>
                         <div class="el-table-list">
                             <el-table :data="tableData" border stripe>
                                 <el-table-column type="expand" label="#" align="center">
@@ -51,7 +58,7 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="静态属性" name="second">
-                        <el-button type="primary" size="small" @click="addAttribute = true">添加属性</el-button>
+                        <el-button type="primary" size="small" @click="addAttribute = true" :disabled="disabled">添加属性</el-button>
                         <div class="el-table-list">
                             <el-table :data="dataTable" border stripe>
                                 <el-table-column type="expand" label="#" align="center">
@@ -125,8 +132,9 @@
         data() {
             return {
                 hideRequired: true,
-                selectRole: '',
+                selectRole: [],
                 options: [],
+                disabled: true,
                 optionsId: '',
                 activeName: 'first',
                 EditAttribute: false,
@@ -156,6 +164,12 @@
                     this.sel = 'many'
                     return false
                 }
+                if(this.selectRole.length == 3){
+                    this.disabled = false
+                }else{
+                    this.disabled = true
+                }
+                console.log(this.selectRole);
                 this.optionsId = value[2];
                 this.Parameter()
             },
@@ -176,17 +190,29 @@
                 console.log(res);
                 this.options = res.data
             },
-            async deleteArgument(id, attr_id) {
-                let data = {
-                    id: id,
-                    attrid: attr_id,
-                }
-                await deleteCategories(data)
-                if (this.sel == 'many') {
-                    this.Parameter()
-                } else if (this.sel == 'only') {
-                    this.AttributeList()
-                }
+            deleteArgument(id, attr_id) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let data = {
+                        id: id,
+                        attrid: attr_id,
+                    }
+                    deleteCategories(data).then(res => {
+                        if (this.sel == 'many') {
+                            this.Parameter()
+                        } else if (this.sel == 'only') {
+                            this.AttributeList()
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             async addParameter() {
                 let data = {

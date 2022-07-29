@@ -19,12 +19,7 @@
 <template>
     <div class="orders">
         <div class="bread">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-            </el-breadcrumb>
+            <BreadCrumb level1="订单管理" level2="订单"></BreadCrumb>
         </div>
         <div class="content">
             <div class="search-button">
@@ -47,6 +42,9 @@
                     <el-table-column prop="is_send" label="是否发货" align="center">
                     </el-table-column>
                     <el-table-column prop="create_time" label="下单时间" align="center">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.create_time | year}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
