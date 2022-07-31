@@ -41,7 +41,7 @@
             padding: 0;
             margin: 0;
             max-height: calc(100vh - 60px);
-            background-image: url('http://96.43.108.32:4500/i/2022/07/31/vk0tcv.jpg');
+            background-image: url('../../assets/image/02.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;

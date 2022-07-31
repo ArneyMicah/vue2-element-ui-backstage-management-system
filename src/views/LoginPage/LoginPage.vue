@@ -5,7 +5,7 @@
         position: relative;
 
         .background {
-            background-image: url("http://96.43.108.32:4500/i/2022/07/26/yr4twj.png");
+            background-image: url("../../assets/image/01.png");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
