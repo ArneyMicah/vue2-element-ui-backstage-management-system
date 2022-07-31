@@ -4,25 +4,13 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    box-shadow: 0 0 3px #fff;
-}
-
-@mixin background {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-@mixin index {
-    padding: 15px;
-    height: calc(100vh - 90px);
-    overflow-y: auto;
 }
 
 @mixin content {
-    background-color: rgba(255, 255, 255, 0.442);
+    background-color: rgba(255, 255, 255, 0.425);
+    border-radius: 10px;
+    box-shadow: 0 0 3px #000;
     opacity: 0.8;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px #000;
+    margin-top: 10px;
 }

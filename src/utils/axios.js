@@ -9,7 +9,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         if (config.url !== '/login') {
-            config.headers.Authorization = window.localStorage.getItem('token')
+            config.headers.Authorization = window.sessionStorage.getItem('token')
         }
         return config
     },
@@ -27,7 +27,7 @@ instance.interceptors.response.use(
                 duration: 500,
             })
             if (result.config.url == '/login') {
-                localStorage.setItem('token', result.data.data.token)
+                sessionStorage.setItem('token', result.data.data.token)
             }
         } else {
             Message({
@@ -38,7 +38,7 @@ instance.interceptors.response.use(
         }
         if(result.data.meta.msg == '无效token'){
             router.replace('/LoginPage')
-            localStorage.removeItem('token')
+            sessionStorage.removeItem('token')
         }
         return result.data
     },
